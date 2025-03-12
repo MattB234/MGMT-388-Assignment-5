@@ -1,0 +1,8 @@
+# Release Year Analysis
+df = pd.read_csv('netflix_titles.csv')
+years = df['release_year']['TV Show'].value_counts().sort_index()
+plt.plot(years.index,years.values)
+plt.xlabel("Year")
+plt.ylabel("Count")
+plt.title("Number of Shows Released Over the Years")
+
