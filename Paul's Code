@@ -1,0 +1,42 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv("/Users/paulwilliams/Downloads/netflix_titles.csv")
+
+df.head()
+
+df.isnull().sum()
+
+fill_values = {}
+for col in df.columns:
+    if df[col].dtype == 'object':  
+        fill_values[col] = df[col].mode()[0]  
+    else:  
+        fill_values[col] = df[col].mean()  
+
+df.fillna(fill_values, inplace=True)
+
+df.isnull().sum()
+
+df.duplicated().sum()
+
+content_counts = df['type'].value_counts()
+plt.figure(figsize=(4, 4))
+plt.pie(content_counts, labels=content_counts.index, autopct='%1.1f%%', colors=['skyblue', 'lightcoral'])
+plt.title("Distribution of Content Types on Netflix")
+
+top_countries = df['country'].value_counts().head(10)
+plt.figure(figsize=(10, 5))
+sns.barplot(x=top_countries.index, y=top_countries.values, hue=top_countries.index, palette="viridis", legend=False)
+plt.xlabel("Country")
+plt.ylabel("Number of Shows")
+plt.title("Top 10 Countries with the Most Netflix Content")
+
+plt.figure(figsize=(10, 5))
+sns.countplot(data=df, x='rating', order=df['rating'].value_counts().index, hue='rating', palette="coolwarm", legend=False)
+plt.xlabel("Rating")
+plt.ylabel("Count")
+plt.title("Distribution of Content Ratings on Netflix")
+plt.xticks(rotation=20)
