@@ -1,8 +1,35 @@
 # Release Year Analysis
-df = pd.read_csv('netflix_titles.csv')
-years = df['release_year']['TV Show'].value_counts().sort_index()
+
+tv_show = df[df['type'] == 'TV Show']
+years = tv_show['release_year'].value_counts().sort_index()
+
+# Line plot displaying the number of shows that have been released over the years
+plt.figure(figsize=(12, 6))
 plt.plot(years.index,years.values)
 plt.xlabel("Year")
 plt.ylabel("Count")
 plt.title("Number of Shows Released Over the Years")
+
+# Duration Analysis
+
+df = pd.read_csv('netflix_titles.csv')
+tv_show = df[df['type'] == 'TV Show']
+movies = df[df['type'] == 'Movie']
+
+# Count plot displaying the frequency count of the number of seasons for tv shows
+tv_show['seasons'] = tv_show['duration'].str.extract('(\d+)').astype(int)
+
+plt.figure(figsize=(12, 6))
+sns.countplot(x='seasons', data = tv_show, hue='seasons', palette="pastel" )
+plt.xlabel("Number of Seasons")
+plt.ylabel("Frequency Count of TV Shows")
+plt.title("Distribution of Seasons Across TV Shows")
+
+# Box plot displaying the 5 number summary for the duration of movies
+movies['duration_min'] = movies['duration'].str.extract('(\d+)').astype(float)
+
+plt.figure(figsize=(12, 6))
+sns.boxplot(x=movies['duration_min'], color='lightgreen')
+plt.xlabel("Duration (in Minutes)")
+plt.title("Distribution of the Duration of Movies")
 
