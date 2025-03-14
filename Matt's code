@@ -10,6 +10,8 @@ plt.xlabel("Year")
 plt.ylabel("Count")
 plt.title("Number of Shows Released Over the Years")
 
+# The line plot shows a slow, gradual increase in the number of tv shows released over the years, with the trend line peaking around the mid 2010s. With this information, Netflix can use the trend line to determine an efficient relase date schedule of tv shows to maximize viewership.
+
 # Duration Analysis
 
 df = pd.read_csv('netflix_titles.csv')
@@ -33,3 +35,4 @@ sns.boxplot(x=movies['duration_min'], color='lightgreen')
 plt.xlabel("Duration (in Minutes)")
 plt.title("Distribution of the Duration of Movies")
 
+# The duration of movies and TV shows varies in that movies have a more even distribution of data points as opposd to tv shows. Most TV shows are 1-2 seasons long, which suggests many people are not willing to watch a show for more than 2 seasons and therefore few shows are successfull past 2 seasons.
