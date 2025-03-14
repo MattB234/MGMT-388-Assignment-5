@@ -2,12 +2,19 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+# imports the necessary packages
 
 df = pd.read_csv("/Users/paulwilliams/Downloads/netflix_titles.csv")
 
+Loads the Netflix csv data set into a Pandas Data Frame in the variable df
+
 df.head()
 
+Displays the first 5 rows of our Netflix data set.
+
 df.isnull().sum()
+
+This sums the columns' number of missing values.
 
 fill_values = {}
 for col in df.columns:
@@ -15,17 +22,24 @@ for col in df.columns:
         fill_values[col] = df[col].mode()[0]  
     else:  
         fill_values[col] = df[col].mean()  
-
 df.fillna(fill_values, inplace=True)
+
+To replace the missing values, I initially replaced them with "Unknown" but this led to a complicated method for visualization because the Unknown category became a large category, which made no sense and would have been distracting/misleading. Then, I tried dropping all the NaNs but that significantly reduced my data set by at least half and skewed results. I then came up with using interpolation in which I replaced numerical missing values with their means and categorical values with their mode, most frequently result. I originally used for a for else loop to achieve this but it raised a future warning so I used the above for else loop instead, in which it checks if the column is an object (categorical variable) then it calculates the mean or else (if numerical), it fills with the mean of the column. We use an empty dictionary and inplace=True means changes are permanent.
 
 df.isnull().sum()
 
+Sums the missing values for each column again to make sure we filled the missing values correctly and none are left.
+
 df.duplicated().sum()
+
+Sums the number of duplicated values which is zero so we do not need to remove any.
 
 content_counts = df['type'].value_counts()
 plt.figure(figsize=(4, 4))
 plt.pie(content_counts, labels=content_counts.index, autopct='%1.1f%%', colors=['skyblue', 'lightcoral'])
 plt.title("Distribution of Content Types on Netflix")
+
+The pie chart shows us that the majority of the content on Netflix is movies, but only about 70% compared to 30% TV shows. This does not tell us much beyond Netflix may want to invest in as many binge-worthy TV shows as they can while also keeping a steady stream of quality movies. In terms of the coding structure, the first line counts the unique occurences of each value from the column type i.e. movie or tv show. I specified the figure size labeled the chart with the two types of content and within the pie chart, displayed each of their relative percentages. I also specified color and a title.
 
 top_countries = df['country'].value_counts().head(10)
 plt.figure(figsize=(10, 5))
@@ -34,9 +48,16 @@ plt.xlabel("Country")
 plt.ylabel("Number of Shows")
 plt.title("Top 10 Countries with the Most Netflix Content")
 
+Clearly, the United States is the main contributor to the content. This is unsurpising given the US's influence and size, so Netflix should continue to target American demographics and Hollywood. India is also a top contributor, likely from Bollywood's sphere of influence, so also continue to create those areas of content. One insight is that although Japan and South Korea are slightly in the top five each, Asia only holds a small subset of the content. China does not even appear likely from their government regulations, despite being a large world contributor and important part of the entertainment industry. Canada, Spain, France, Mexico, and Egypt (mostly Europe) round out our top ten. This information could be used to carry out expansions and partnerships with India and the United Kingdom to pursue this large customer base. It could also be used to diversify their product in smaller countries like Egpyt or to discover cultural trends with emerging genres and pop culture.
+
 plt.figure(figsize=(10, 5))
 sns.countplot(data=df, x='rating', order=df['rating'].value_counts().index, hue='rating', palette="coolwarm", legend=False)
 plt.xlabel("Rating")
 plt.ylabel("Count")
 plt.title("Distribution of Content Ratings on Netflix")
 plt.xticks(rotation=20)
+
+The most common content ratings are TV-Mature, TV-14 for audiences 14 years old and over, TV-PG (parental guidance suggested), Rated R and PG-13 for movies, etc. As you can see, much of the content is for audiences at least 13 years old. Content for children only makes up about 1000 different values in total compared to just TV-MA with over 3000 values. They should probably consider making more kid friendly content. Netflix likely prefers mature content in recommendations, a potential red flag for protective parents. Once somebody clicks on a mature movie or tv show, they will continue to get similar recommendations. 
+
+The code: We set a figure size. We made a countplot with respective rating on the x axis and count on the y axis, we ensured that they are displayed in descending order of frequency, assigned colors based on the rating, and hid the legend which was distracting. Lastly, I added a title and plt.ticks(rotation=20) rotates the labels of each rating under the x axis so that they do not overlap in the display.
+
